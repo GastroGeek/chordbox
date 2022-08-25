@@ -1,31 +1,31 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-import { SVG, registerWindow } from "@svgdotjs/svg.js";
-import { createSVGWindow } from "svgdom";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChordBox = void 0;
+const path_1 = require("path");
+const svg_js_1 = require("@svgdotjs/svg.js");
+const svgdom_1 = require("svgdom");
 /* eslint-disable */
-var window = createSVGWindow();
-var document = window.document;
-registerWindow(window, document);
+svgdom_1.config
+    .setFontDir((0, path_1.resolve)(__dirname, 'assets/fonts'))
+    .setFontFamilyMappings({
+    'sans-serif': 'nahnah.ttf'
+});
+const window = (0, svgdom_1.createSVGWindow)();
+const document = window.document;
+(0, svg_js_1.registerWindow)(window, document);
 // the things a user can configure
-var ChordBoxOptionsDefaults = {
+const ChordBoxOptionsDefaults = {
     title: 'Chord',
     frets: 3,
     baseFret: 1,
     dots: [],
-    dotText: function () { return ''; },
+    dotText: () => '',
     tunings: ['E', 'A', 'D', 'G', 'B', 'E'],
     guages: [46, 36, 25, 17, 13, 10],
 };
-var CHORDBOX_DIMENSIONS = {
+const CHORDBOX_SETTINGS = {
+    // typography
+    fontFamily: 'Arial',
     // base
     width: 285,
     height: 350,
@@ -62,16 +62,16 @@ var CHORDBOX_DIMENSIONS = {
     dotFontSize: 12,
     dotFillColor: '#000'
 };
-var ChordBox = /** @class */ (function () {
-    function ChordBox(chordBoxOptions) {
+class ChordBox {
+    constructor(chordBoxOptions) {
         this.chordBoxOptions = ChordBoxOptionsDefaults;
-        this.renderer = SVG();
+        this.renderer = (0, svg_js_1.SVG)();
         // assign options
-        this.chordBoxOptions = __assign(__assign({}, this.chordBoxOptions), chordBoxOptions);
+        this.chordBoxOptions = Object.assign(Object.assign({}, this.chordBoxOptions), chordBoxOptions);
         this.validateChordBoxOptions();
         return this;
     }
-    ChordBox.prototype.validateChordBoxOptions = function () {
+    validateChordBoxOptions() {
         if (this.chordBoxOptions.frets < 1 || this.chordBoxOptions.frets > 6) {
             throw new Error('frets must be between 1 and 6');
         }
@@ -84,67 +84,66 @@ var ChordBox = /** @class */ (function () {
         if (this.chordBoxOptions.guages.length !== 6) {
             throw new Error('guages must present for 6 strings only');
         }
-    };
-    ChordBox.prototype.generateChordBoxBase = function () {
-        var chordBoxBaseGroup = SVG().group();
-        var chordBoxBaseContainer = SVG()
-            .rect(CHORDBOX_DIMENSIONS.width, CHORDBOX_DIMENSIONS.height)
-            .radius(CHORDBOX_DIMENSIONS.radius)
-            .fill(CHORDBOX_DIMENSIONS.borderFillColor);
-        var chordBoxBase = SVG()
-            .rect(CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding), CHORDBOX_DIMENSIONS.height - (2 * CHORDBOX_DIMENSIONS.padding))
-            .fill(CHORDBOX_DIMENSIONS.fillColor);
+    }
+    generateChordBoxBase() {
+        const chordBoxBaseGroup = (0, svg_js_1.SVG)().group();
+        const chordBoxBaseContainer = (0, svg_js_1.SVG)()
+            .rect(CHORDBOX_SETTINGS.width, CHORDBOX_SETTINGS.height)
+            .radius(CHORDBOX_SETTINGS.radius)
+            .fill(CHORDBOX_SETTINGS.borderFillColor);
+        const chordBoxBase = (0, svg_js_1.SVG)()
+            .rect(CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding), CHORDBOX_SETTINGS.height - (2 * CHORDBOX_SETTINGS.padding))
+            .fill(CHORDBOX_SETTINGS.fillColor);
         chordBoxBaseGroup.add(chordBoxBaseContainer);
         chordBoxBaseGroup.add(chordBoxBase);
         chordBoxBaseContainer.back();
         chordBoxBase.front();
-        chordBoxBase.move(CHORDBOX_DIMENSIONS.padding, CHORDBOX_DIMENSIONS.padding);
+        chordBoxBase.move(CHORDBOX_SETTINGS.padding, CHORDBOX_SETTINGS.padding);
         return chordBoxBaseGroup;
-    };
-    ChordBox.prototype.generateChordBoxTitle = function () {
-        var chordBoxTitleGroup = SVG().group();
-        var chordBoxTitleContainer = SVG()
-            .rect(CHORDBOX_DIMENSIONS.titleWidth, CHORDBOX_DIMENSIONS.titleHeight)
-            .fill(CHORDBOX_DIMENSIONS.titleFillColor);
-        var ChordBoxTitle = SVG()
-            .plain(this.chordBoxOptions.title)
+    }
+    generateChordBoxTitle() {
+        const chordBoxTitleGroup = (0, svg_js_1.SVG)().group();
+        const chordBoxTitleContainer = (0, svg_js_1.SVG)()
+            .rect(CHORDBOX_SETTINGS.titleWidth, CHORDBOX_SETTINGS.titleHeight)
+            .fill(CHORDBOX_SETTINGS.titleFillColor);
+        const ChordBoxTitle = (0, svg_js_1.SVG)()
+            .text(this.chordBoxOptions.title)
             .attr({
-            'font-size': CHORDBOX_DIMENSIONS.titleFontSize,
-            'font-family': 'Arial'
+            'font-size': CHORDBOX_SETTINGS.titleFontSize,
+            'font-family': CHORDBOX_SETTINGS.fontFamily
         })
-            .fill(CHORDBOX_DIMENSIONS.titleFontColor)
-            .cx(CHORDBOX_DIMENSIONS.titleWidth / 2)
-            .cy(CHORDBOX_DIMENSIONS.titleHeight / 2);
+            .fill(CHORDBOX_SETTINGS.titleFontColor)
+            .cx(CHORDBOX_SETTINGS.titleWidth / 2)
+            .cy(CHORDBOX_SETTINGS.titleHeight / 2);
         chordBoxTitleGroup.add(chordBoxTitleContainer);
         chordBoxTitleGroup.add(ChordBoxTitle);
         chordBoxTitleContainer.back();
         ChordBoxTitle.front();
-        chordBoxTitleGroup.move(CHORDBOX_DIMENSIONS.padding, CHORDBOX_DIMENSIONS.padding);
+        chordBoxTitleGroup.move(CHORDBOX_SETTINGS.padding, CHORDBOX_SETTINGS.padding);
         return chordBoxTitleGroup;
-    };
-    ChordBox.prototype.generatechordBoxFretLabels = function () {
-        var _this = this;
-        var chordBoxFretLabelsGroup = SVG().group();
-        var fretLabelsHeight = CHORDBOX_DIMENSIONS.height - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.titleHeight - CHORDBOX_DIMENSIONS.stringLabelsHeight;
-        var fretLabelHeight = fretLabelsHeight / this.chordBoxOptions.frets;
-        var chordBoxFretLabelsContainer = SVG()
-            .rect(CHORDBOX_DIMENSIONS.fretLabelsWidth, fretLabelsHeight)
-            .fill(CHORDBOX_DIMENSIONS.fretLabelsContainerFillColor);
-        var chordBoxFretboardLabels = Array
+    }
+    generatechordBoxFretLabels() {
+        const chordBoxFretLabelsGroup = (0, svg_js_1.SVG)().group();
+        const fretLabelsHeight = CHORDBOX_SETTINGS.height - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.titleHeight - CHORDBOX_SETTINGS.stringLabelsHeight;
+        const fretLabelHeight = fretLabelsHeight / this.chordBoxOptions.frets;
+        const chordBoxFretLabelsContainer = (0, svg_js_1.SVG)()
+            .rect(CHORDBOX_SETTINGS.fretLabelsWidth, fretLabelsHeight)
+            .fill(CHORDBOX_SETTINGS.fretLabelsContainerFillColor);
+        const chordBoxFretboardLabels = Array
             .from(Array(this.chordBoxOptions.frets))
-            .map(function (_, fretLabelIndex) {
-            var chordBoxFretLabelGroup = SVG().group();
-            var chordBoxFretLabelContainer = SVG()
-                .rect(CHORDBOX_DIMENSIONS.fretLabelsWidth, fretLabelHeight)
-                .fill(CHORDBOX_DIMENSIONS.fretLabelContainerFillColor);
-            var chordBoxFretLabelText = SVG()
-                .plain((_this.chordBoxOptions.baseFret + fretLabelIndex).toString())
+            .map((_, fretLabelIndex) => {
+            const chordBoxFretLabelGroup = (0, svg_js_1.SVG)().group();
+            const chordBoxFretLabelContainer = (0, svg_js_1.SVG)()
+                .rect(CHORDBOX_SETTINGS.fretLabelsWidth, fretLabelHeight)
+                .fill(CHORDBOX_SETTINGS.fretLabelContainerFillColor);
+            const chordBoxFretLabelText = (0, svg_js_1.SVG)()
+                .text((this.chordBoxOptions.baseFret + fretLabelIndex).toString())
                 .attr({
-                'font-size': CHORDBOX_DIMENSIONS.fretLabelFontSize,
-                'font-family': 'Arial'
+                'font-size': CHORDBOX_SETTINGS.fretLabelFontSize,
+                'font-family': CHORDBOX_SETTINGS.fontFamily
             })
-                .fill(CHORDBOX_DIMENSIONS.fretLabelFontColor)
-                .cx(CHORDBOX_DIMENSIONS.fretLabelsWidth / 2)
+                .fill(CHORDBOX_SETTINGS.fretLabelFontColor)
+                .cx(CHORDBOX_SETTINGS.fretLabelsWidth / 2)
                 .cy(fretLabelHeight / 2);
             chordBoxFretLabelGroup.add(chordBoxFretLabelContainer);
             chordBoxFretLabelGroup.add(chordBoxFretLabelText);
@@ -155,37 +154,36 @@ var ChordBox = /** @class */ (function () {
         });
         chordBoxFretLabelsGroup.add(chordBoxFretLabelsContainer);
         chordBoxFretboardLabels
-            .map(function (chordBoxFretLabel) {
+            .map(chordBoxFretLabel => {
             chordBoxFretLabelsGroup.add(chordBoxFretLabel);
         });
         chordBoxFretLabelsContainer.back();
-        chordBoxFretLabelsGroup.move(CHORDBOX_DIMENSIONS.padding, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight + CHORDBOX_DIMENSIONS.stringLabelsHeight);
+        chordBoxFretLabelsGroup.move(CHORDBOX_SETTINGS.padding, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight);
         return chordBoxFretLabelsGroup;
-    };
-    ChordBox.prototype.generatechordBoxStringLabels = function () {
-        var _this = this;
-        var chordBoxStringLabelsGroup = SVG().group();
-        var stringLabelsWidth = CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.fretLabelsWidth;
-        var stringLabelWidth = stringLabelsWidth / this.chordBoxOptions.tunings.length; // string count
-        var chordBoxStringLabelsContainer = SVG()
-            .rect(stringLabelsWidth, CHORDBOX_DIMENSIONS.stringLabelsHeight)
-            .fill(CHORDBOX_DIMENSIONS.stringLabelsContainerFillColor);
-        var chordBoxStringboardLabels = Array
+    }
+    generatechordBoxStringLabels() {
+        const chordBoxStringLabelsGroup = (0, svg_js_1.SVG)().group();
+        const stringLabelsWidth = CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.fretLabelsWidth;
+        const stringLabelWidth = stringLabelsWidth / this.chordBoxOptions.tunings.length; // string count
+        const chordBoxStringLabelsContainer = (0, svg_js_1.SVG)()
+            .rect(stringLabelsWidth, CHORDBOX_SETTINGS.stringLabelsHeight)
+            .fill(CHORDBOX_SETTINGS.stringLabelsContainerFillColor);
+        const chordBoxStringboardLabels = Array
             .from(Array(this.chordBoxOptions.tunings.length /* string count */))
-            .map(function (_, stringLabelIndex) {
-            var chordBoxStringLabelGroup = SVG().group();
-            var chordBoxStringLabelContainer = SVG()
-                .rect(stringLabelWidth, CHORDBOX_DIMENSIONS.stringLabelsHeight)
-                .fill(CHORDBOX_DIMENSIONS.stringLabelContainerFillColor);
-            var chordBoxStringLabelText = SVG()
-                .plain(_this.chordBoxOptions.tunings[stringLabelIndex])
+            .map((_, stringLabelIndex) => {
+            const chordBoxStringLabelGroup = (0, svg_js_1.SVG)().group();
+            const chordBoxStringLabelContainer = (0, svg_js_1.SVG)()
+                .rect(stringLabelWidth, CHORDBOX_SETTINGS.stringLabelsHeight)
+                .fill(CHORDBOX_SETTINGS.stringLabelContainerFillColor);
+            const chordBoxStringLabelText = (0, svg_js_1.SVG)()
+                .text(this.chordBoxOptions.tunings[stringLabelIndex])
                 .attr({
-                'font-size': CHORDBOX_DIMENSIONS.stringLabelFontSize,
-                'font-family': 'Arial'
+                'font-size': CHORDBOX_SETTINGS.stringLabelFontSize,
+                'font-family': CHORDBOX_SETTINGS.fontFamily
             })
-                .fill(CHORDBOX_DIMENSIONS.stringLabelFontColor)
+                .fill(CHORDBOX_SETTINGS.stringLabelFontColor)
                 .cx(stringLabelWidth / 2)
-                .cy(CHORDBOX_DIMENSIONS.stringLabelsHeight / 2);
+                .cy(CHORDBOX_SETTINGS.stringLabelsHeight / 2);
             chordBoxStringLabelGroup.add(chordBoxStringLabelContainer);
             chordBoxStringLabelGroup.add(chordBoxStringLabelText);
             chordBoxStringLabelContainer.back();
@@ -195,119 +193,117 @@ var ChordBox = /** @class */ (function () {
         });
         chordBoxStringLabelsGroup.add(chordBoxStringLabelsContainer);
         chordBoxStringboardLabels
-            .map(function (chordBoxStringLabel) {
+            .map(chordBoxStringLabel => {
             chordBoxStringLabelsGroup.add(chordBoxStringLabel);
         });
         chordBoxStringLabelsContainer.back();
-        chordBoxStringLabelsGroup.move(CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.fretLabelsWidth, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight);
+        chordBoxStringLabelsGroup.move(CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight);
         return chordBoxStringLabelsGroup;
-    };
-    ChordBox.prototype.generateChordboxBody = function () {
-        var chordBoxBodyGroup = SVG().group();
-        var chordBoxBody = SVG()
-            .rect(CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.fretLabelsWidth, CHORDBOX_DIMENSIONS.height - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.titleHeight - CHORDBOX_DIMENSIONS.stringLabelsHeight)
-            .fill(CHORDBOX_DIMENSIONS.bodyFillColor);
+    }
+    generateChordboxBody() {
+        const chordBoxBodyGroup = (0, svg_js_1.SVG)().group();
+        const chordBoxBody = (0, svg_js_1.SVG)()
+            .rect(CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.fretLabelsWidth, CHORDBOX_SETTINGS.height - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.titleHeight - CHORDBOX_SETTINGS.stringLabelsHeight)
+            .fill(CHORDBOX_SETTINGS.bodyFillColor);
         chordBoxBodyGroup.add(chordBoxBody);
-        chordBoxBodyGroup.move(CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.fretLabelsWidth, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight + CHORDBOX_DIMENSIONS.stringLabelsHeight);
+        chordBoxBodyGroup.move(CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight);
         return chordBoxBodyGroup;
-    };
-    ChordBox.prototype.generatechordBoxNut = function () {
-        var chordBoxNutGroup = SVG().group();
-        var chordBoxNutContainer = SVG()
-            .rect((CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.fretLabelsWidth) - (2 * CHORDBOX_DIMENSIONS.nutContainerPadding), CHORDBOX_DIMENSIONS.nutHeight)
+    }
+    generatechordBoxNut() {
+        const chordBoxNutGroup = (0, svg_js_1.SVG)().group();
+        const chordBoxNutContainer = (0, svg_js_1.SVG)()
+            .rect((CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.fretLabelsWidth) - (2 * CHORDBOX_SETTINGS.nutContainerPadding), CHORDBOX_SETTINGS.nutHeight)
             .fill('none') // hide by default
-            .radius(CHORDBOX_DIMENSIONS.nutRadius);
+            .radius(CHORDBOX_SETTINGS.nutRadius);
         // the nut should only be visible if baseFret === 1
         if (this.chordBoxOptions.baseFret === 1) {
-            chordBoxNutContainer.fill(CHORDBOX_DIMENSIONS.nutFillColor);
+            chordBoxNutContainer.fill(CHORDBOX_SETTINGS.nutFillColor);
         }
         chordBoxNutGroup.add(chordBoxNutContainer);
-        chordBoxNutGroup.move(CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.fretLabelsWidth + CHORDBOX_DIMENSIONS.nutContainerPadding, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight + CHORDBOX_DIMENSIONS.stringLabelsHeight);
+        chordBoxNutGroup.move(CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth + CHORDBOX_SETTINGS.nutContainerPadding, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight);
         return chordBoxNutGroup;
-    };
-    ChordBox.prototype.generatechordBoxFrets = function () {
-        var chordBoxFretsGroup = SVG().group();
-        var fretsWidth = (CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.fretLabelsWidth) - (2 * CHORDBOX_DIMENSIONS.nutContainerPadding);
-        var fretsHeight = CHORDBOX_DIMENSIONS.height - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.titleHeight - CHORDBOX_DIMENSIONS.stringLabelsHeight - CHORDBOX_DIMENSIONS.nutHeight;
-        var fretHeight = fretsHeight / this.chordBoxOptions.frets;
-        var chordBoxFretsContainer = SVG()
-            .rect(fretsWidth, fretsHeight).fill(CHORDBOX_DIMENSIONS.fretsContainerFillColor);
-        var chordBoxFretMarkers = Array
+    }
+    generatechordBoxFrets() {
+        const chordBoxFretsGroup = (0, svg_js_1.SVG)().group();
+        const fretsWidth = (CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.fretLabelsWidth) - (2 * CHORDBOX_SETTINGS.nutContainerPadding);
+        const fretsHeight = CHORDBOX_SETTINGS.height - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.titleHeight - CHORDBOX_SETTINGS.stringLabelsHeight - CHORDBOX_SETTINGS.nutHeight;
+        const fretHeight = fretsHeight / this.chordBoxOptions.frets;
+        const chordBoxFretsContainer = (0, svg_js_1.SVG)()
+            .rect(fretsWidth, fretsHeight).fill(CHORDBOX_SETTINGS.fretsContainerFillColor);
+        const chordBoxFretMarkers = Array
             .from(Array(this.chordBoxOptions.frets))
-            .map(function (_, fretMarkerIndex) {
-            var fretMarker = SVG()
-                .rect(fretsWidth, CHORDBOX_DIMENSIONS.fretMarkerHeight)
-                .fill(CHORDBOX_DIMENSIONS.fretMarkerFillColor);
+            .map((_, fretMarkerIndex) => {
+            const fretMarker = (0, svg_js_1.SVG)()
+                .rect(fretsWidth, CHORDBOX_SETTINGS.fretMarkerHeight)
+                .fill(CHORDBOX_SETTINGS.fretMarkerFillColor);
             fretMarker.move(0, fretMarkerIndex * fretHeight);
             return fretMarker;
         });
         chordBoxFretsGroup.add(chordBoxFretsContainer);
-        chordBoxFretMarkers.map(function (fretMarker) {
+        chordBoxFretMarkers.map(fretMarker => {
             chordBoxFretsGroup.add(fretMarker);
         });
         chordBoxFretsGroup.back();
-        chordBoxFretsGroup.move(CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.fretLabelsWidth + CHORDBOX_DIMENSIONS.nutContainerPadding, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight + CHORDBOX_DIMENSIONS.stringLabelsHeight + CHORDBOX_DIMENSIONS.nutHeight);
+        chordBoxFretsGroup.move(CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth + CHORDBOX_SETTINGS.nutContainerPadding, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight + CHORDBOX_SETTINGS.nutHeight);
         return chordBoxFretsGroup;
-    };
-    ChordBox.prototype.generateChordBoxStrings = function () {
-        var _this = this;
-        var chordBoxStringsGroup = SVG().group();
-        var stringsWidth = CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.fretLabelsWidth;
-        var stringsHeight = CHORDBOX_DIMENSIONS.height - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.titleHeight - CHORDBOX_DIMENSIONS.stringLabelsHeight - CHORDBOX_DIMENSIONS.nutHeight;
-        var stringWidth = stringsWidth / this.chordBoxOptions.tunings.length;
-        var stringGuageScaleFactor = 0.125;
-        var chordBoxStringsContainer = SVG()
+    }
+    generateChordBoxStrings() {
+        const chordBoxStringsGroup = (0, svg_js_1.SVG)().group();
+        const stringsWidth = CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.fretLabelsWidth;
+        const stringsHeight = CHORDBOX_SETTINGS.height - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.titleHeight - CHORDBOX_SETTINGS.stringLabelsHeight - CHORDBOX_SETTINGS.nutHeight;
+        const stringWidth = stringsWidth / this.chordBoxOptions.tunings.length;
+        const stringGuageScaleFactor = 0.125;
+        const chordBoxStringsContainer = (0, svg_js_1.SVG)()
             .rect(stringsWidth, stringsHeight).fill('none'); // so frets show through
-        var chordBoxStrings = Array
+        const chordBoxStrings = Array
             .from(Array(this.chordBoxOptions.tunings.length))
-            .map(function (_, stringIndex) {
-            var stringGuage = _this.chordBoxOptions.guages[stringIndex] * stringGuageScaleFactor;
-            var string = SVG()
+            .map((_, stringIndex) => {
+            const stringGuage = this.chordBoxOptions.guages[stringIndex] * stringGuageScaleFactor;
+            const string = (0, svg_js_1.SVG)()
                 .rect(stringGuage, stringsHeight)
-                .fill(CHORDBOX_DIMENSIONS.stringFillColor);
+                .fill(CHORDBOX_SETTINGS.stringFillColor);
             string.move(stringIndex * stringWidth + stringWidth / 2, 0);
             return string;
         });
         chordBoxStringsGroup.add(chordBoxStringsContainer);
-        chordBoxStrings.map(function (string) {
+        chordBoxStrings.map(string => {
             chordBoxStringsGroup.add(string);
         });
         chordBoxStringsGroup.back();
-        chordBoxStringsGroup.move(CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.fretLabelsWidth, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight + CHORDBOX_DIMENSIONS.stringLabelsHeight + CHORDBOX_DIMENSIONS.nutHeight);
+        chordBoxStringsGroup.move(CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight + CHORDBOX_SETTINGS.nutHeight);
         return chordBoxStringsGroup;
-    };
-    ChordBox.prototype.generateChordBoxDots = function () {
-        var _this = this;
-        var chordBoxDotsGroup = SVG().group();
-        var dotsWidth = CHORDBOX_DIMENSIONS.width - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.fretLabelsWidth;
-        var dotsHeight = CHORDBOX_DIMENSIONS.height - (2 * CHORDBOX_DIMENSIONS.padding) - CHORDBOX_DIMENSIONS.titleHeight - CHORDBOX_DIMENSIONS.stringLabelsHeight - CHORDBOX_DIMENSIONS.nutHeight;
-        var dotWidth = dotsWidth / this.chordBoxOptions.tunings.length;
-        var dotHeight = dotsHeight / this.chordBoxOptions.frets;
-        var strings = this.chordBoxOptions.tunings.length;
-        var guages = this.chordBoxOptions.guages;
-        var stringGuageScaleFactor = 0.125;
-        var optionsDots = this.chordBoxOptions.dots;
-        var chordBoxDotsContainer = SVG()
+    }
+    generateChordBoxDots() {
+        const chordBoxDotsGroup = (0, svg_js_1.SVG)().group();
+        const dotsWidth = CHORDBOX_SETTINGS.width - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.fretLabelsWidth;
+        const dotsHeight = CHORDBOX_SETTINGS.height - (2 * CHORDBOX_SETTINGS.padding) - CHORDBOX_SETTINGS.titleHeight - CHORDBOX_SETTINGS.stringLabelsHeight - CHORDBOX_SETTINGS.nutHeight;
+        const dotWidth = dotsWidth / this.chordBoxOptions.tunings.length;
+        const dotHeight = dotsHeight / this.chordBoxOptions.frets;
+        const strings = this.chordBoxOptions.tunings.length;
+        const guages = this.chordBoxOptions.guages;
+        const stringGuageScaleFactor = 0.125;
+        const optionsDots = this.chordBoxOptions.dots;
+        const chordBoxDotsContainer = (0, svg_js_1.SVG)()
             .rect(dotsWidth, dotsHeight).fill('none'); // so dots show through
-        var chordBoxDots = Array
+        const chordBoxDots = Array
             .from(optionsDots)
-            .map(function (dot) {
-            var dotGroup = SVG().group();
-            var dotContainer = SVG()
-                .circle(CHORDBOX_DIMENSIONS.dotSize)
-                .fill(CHORDBOX_DIMENSIONS.dotFillColor);
+            .map(dot => {
+            const dotGroup = (0, svg_js_1.SVG)().group();
+            const dotContainer = (0, svg_js_1.SVG)()
+                .circle(CHORDBOX_SETTINGS.dotSize)
+                .fill(CHORDBOX_SETTINGS.dotFillColor);
             dotContainer
                 .cx(((strings - dot.string) * dotWidth + dotWidth / 2) + (guages[strings - dot.string] * stringGuageScaleFactor) / 2)
                 .cy((dot.fret - 1) * dotHeight + dotHeight / 2);
             // due to our container dimensions
             if (dot.fret === 1) {
-                dotContainer.cy(dotHeight / 2 + CHORDBOX_DIMENSIONS.nutHeight / (2 * _this.chordBoxOptions.frets));
+                dotContainer.cy(dotHeight / 2 + CHORDBOX_SETTINGS.nutHeight / (2 * this.chordBoxOptions.frets));
             }
-            var dotText = SVG()
-                .plain(_this.chordBoxOptions.dotText(dot))
+            const dotText = (0, svg_js_1.SVG)()
+                .text(this.chordBoxOptions.dotText(dot))
                 .attr({
-                'font-size': CHORDBOX_DIMENSIONS.dotFontSize,
-                'font-family': 'Arial'
+                'font-size': CHORDBOX_SETTINGS.dotFontSize,
+                'font-family': CHORDBOX_SETTINGS.fontFamily
             })
                 .fill('#fff');
             dotText
@@ -315,7 +311,7 @@ var ChordBox = /** @class */ (function () {
                 .cy((dot.fret - 1) * dotHeight + dotHeight / 2);
             // due to our container dimensions
             if (dot.fret === 1) {
-                dotText.cy(dotHeight / 2 + CHORDBOX_DIMENSIONS.nutHeight / (2 * _this.chordBoxOptions.frets));
+                dotText.cy(dotHeight / 2 + CHORDBOX_SETTINGS.nutHeight / (2 * this.chordBoxOptions.frets));
             }
             dotGroup.add(dotContainer);
             dotGroup.add(dotText);
@@ -324,19 +320,24 @@ var ChordBox = /** @class */ (function () {
             return dotGroup;
         });
         chordBoxDotsGroup.add(chordBoxDotsContainer);
-        chordBoxDots.map(function (dot) {
+        chordBoxDots.map(dot => {
             chordBoxDotsGroup.add(dot);
         });
         chordBoxDotsGroup.back();
-        chordBoxDotsGroup.move(CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.fretLabelsWidth, CHORDBOX_DIMENSIONS.padding + CHORDBOX_DIMENSIONS.titleHeight + CHORDBOX_DIMENSIONS.stringLabelsHeight + CHORDBOX_DIMENSIONS.nutHeight);
+        chordBoxDotsGroup.move(CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth, CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight + CHORDBOX_SETTINGS.nutHeight);
         return chordBoxDotsGroup;
-    };
-    ChordBox.prototype.setDots = function (dots) {
+    }
+    setFontsDir(fontsDir = (0, path_1.resolve)(__dirname, './assets/fonts')) {
+        // eslint-disable-next-line
+        svgdom_1.config.setFontDir(fontsDir);
+        return this;
+    }
+    setDots(dots) {
         this.chordBoxOptions.dots = dots;
         this.render();
         return this;
-    };
-    ChordBox.prototype.render = function () {
+    }
+    render() {
         // always clear the renderer
         this.renderer.clear();
         // build it up in layers
@@ -353,17 +354,17 @@ var ChordBox = /** @class */ (function () {
         // fixes chrome rendering issue
         this.renderer
             .attr({
-            width: CHORDBOX_DIMENSIONS.width,
-            height: CHORDBOX_DIMENSIONS.height,
+            width: CHORDBOX_SETTINGS.width,
+            height: CHORDBOX_SETTINGS.height,
         });
         return this;
-    };
-    ChordBox.prototype.toSVG = function () {
+    }
+    toSVG() {
         return this.renderer.svg();
-    };
-    ChordBox.prototype.toSVGBase64URI = function () {
-        return "data:image/svg+xml;base64,".concat(Buffer.from(this.renderer.svg()).toString("base64"));
-    };
-    return ChordBox;
-}());
-export { ChordBox };
+    }
+    toSVGBase64URI() {
+        return `data:image/svg+xml;base64,${Buffer.from(this.renderer.svg()).toString("base64")}`;
+    }
+}
+exports.ChordBox = ChordBox;
+exports.default = { ChordBox };

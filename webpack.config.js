@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   target: 'node',
@@ -15,6 +16,13 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'fonts/*'), to: path.resolve(__dirname, "dist") },
+      ],
+    }),
+  ],
   output: {
     library: 'chordbox',
     libraryTarget: 'umd',

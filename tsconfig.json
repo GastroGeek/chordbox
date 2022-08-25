@@ -5,8 +5,8 @@
     "outDir": "dist",
     "sourceMap": false,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "module": "commonjs",
+    "target": "es2015",
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node"
