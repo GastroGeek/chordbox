@@ -14,6 +14,8 @@ declare class ChordBox {
     private generateChordBoxStrings;
     private generateChordBoxDots;
     setFontsDir(fontsDir?: string): this;
+    setFrets(frets: number): this;
+    setBaseFret(baseFret: number): this;
     setDots(dots: ChordBoxDot[]): this;
     render(): this;
     toSVG(): string;

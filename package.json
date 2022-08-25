@@ -1,6 +1,6 @@
 {
   "name": "chordbox",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A simple SVG-based guitar chord renderer.",
   "main": "dist/chordbox.umd.js",
   "exports": {

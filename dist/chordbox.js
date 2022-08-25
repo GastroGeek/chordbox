@@ -5,11 +5,7 @@ const path_1 = require("path");
 const svg_js_1 = require("@svgdotjs/svg.js");
 const svgdom_1 = require("svgdom");
 /* eslint-disable */
-svgdom_1.config
-    .setFontDir((0, path_1.resolve)(__dirname, 'assets/fonts'))
-    .setFontFamilyMappings({
-    'sans-serif': 'nahnah.ttf'
-});
+svgdom_1.config.setFontDir((0, path_1.resolve)(__dirname, 'assets/fonts'));
 const window = (0, svgdom_1.createSVGWindow)();
 const document = window.document;
 (0, svg_js_1.registerWindow)(window, document);
@@ -330,6 +326,16 @@ class ChordBox {
     setFontsDir(fontsDir = (0, path_1.resolve)(__dirname, './assets/fonts')) {
         // eslint-disable-next-line
         svgdom_1.config.setFontDir(fontsDir);
+        return this;
+    }
+    setFrets(frets) {
+        this.chordBoxOptions.frets = frets;
+        this.validateChordBoxOptions();
+        return this;
+    }
+    setBaseFret(baseFret) {
+        this.chordBoxOptions.baseFret = baseFret;
+        this.validateChordBoxOptions();
         return this;
     }
     setDots(dots) {
