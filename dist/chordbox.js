@@ -367,4 +367,3 @@ var ChordBox = /** @class */ (function () {
     return ChordBox;
 }());
 export default { ChordBox: ChordBox };
-//# sourceMappingURL=chordbox.js.map
