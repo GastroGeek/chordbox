@@ -445,6 +445,7 @@ class ChordBox {
 
     return chordBoxStringsGroup
   }
+
   private generateChordBoxDots () {
     const chordBoxDotsGroup = SVG().group()
 
@@ -525,7 +526,7 @@ class ChordBox {
     return chordBoxDotsGroup
   }
 
-  private setDots (dots: ChordBoxDot[]) {
+  setDots (dots: ChordBoxDot[]) {
     this.chordBoxOptions.dots = dots
 
     this.render()
@@ -570,4 +571,4 @@ class ChordBox {
   }
 }
 
-export default { ChordBox }
+export { ChordBox }

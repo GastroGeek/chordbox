@@ -1,4 +1,4 @@
-import { ChordBoxOptions } from './types';
+import { ChordBoxOptions, ChordBoxDot } from './types';
 declare class ChordBox {
     private renderer;
     private chordBoxOptions;
@@ -13,12 +13,9 @@ declare class ChordBox {
     private generatechordBoxFrets;
     private generateChordBoxStrings;
     private generateChordBoxDots;
-    private setDots;
+    setDots(dots: ChordBoxDot[]): this;
     render(): this;
     toSVG(): string;
     toSVGBase64URI(): string;
 }
-declare const _default: {
-    ChordBox: typeof ChordBox;
-};
-export default _default;
+export { ChordBox };

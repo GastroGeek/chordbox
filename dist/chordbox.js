@@ -366,4 +366,4 @@ var ChordBox = /** @class */ (function () {
     };
     return ChordBox;
 }());
-export default { ChordBox: ChordBox };
+export { ChordBox };
