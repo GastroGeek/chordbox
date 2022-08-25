@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
+    <script type="text/javascript" src="live.js"></script>
+
+    <script>
+      axios.get('http://127.0.0.1:3000')
+        .then(function({data}) {
+          const chordboxes = document.getElementById('chordboxes')
+
+          Object.keys(data).forEach(function(chordbox) {
+            var img = document.createElement('img');
+            img.src = data[chordbox];
+
+            var imgWrap = document.createElement('div')
+            imgWrap.style = "padding: 10px; display: inline-block;"
+            
+            imgWrap.appendChild(img);
+            chordboxes.appendChild(imgWrap);
+          });
+        });
+    </script>
+  </head>
+
+  <body>
+    <div id="chordboxes"></div>
+  </body>
+</html>
