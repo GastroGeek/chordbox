@@ -1,6 +1,9 @@
 {
+  "include": ["src/**/*"],
+  "exclude": ["src/svgdom.d.ts"],
   "compilerOptions": {
-    "outDir": "./dist/",
+    "declaration": true,
+    "outDir": "dist",
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "es6",

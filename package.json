@@ -1,6 +1,6 @@
 {
   "name": "chordbox",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/chordbox.umd.js",
   "author": "GastroGeek <gastrogeek@gmail.com>",
@@ -8,6 +8,7 @@
   "files": [
     "dist"
   ],
+  "typings": "dist/chordbox.d.ts",
   "scripts": {
     "dev": "npm-run-all --parallel pre-build demo-server demo-ui watch",
     "pre-build": "npm-run-all pre-build-chordbox pre-build-demo-server",
@@ -17,7 +18,10 @@
     "demo-ui": "nodemon -L --exec 'serve -p 9999 ./demo/dist'",
     "watch": "npm-run-all --parallel watch-chordbox watch-demo-server",
     "watch-chordbox": "webpack -c ./webpack.config.js --watch",
-    "watch-demo-server": "webpack -c ./demo/webpack.config.js --watch"
+    "watch-demo-server": "webpack -c ./demo/webpack.config.js --watch",
+    "build": "npm-run-all build-chordbox build-typings",
+    "build-chordbox": "NODE_ENV=production webpack -c ./webpack.config.js",
+    "build-typings": "tsc -p tsconfig.json"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",
