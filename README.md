@@ -21,7 +21,7 @@ const svgBase64URI = new ChordBox({
 
 ## Fonts
 
-You will need to ensure the font, `OpenSans-Regular.ttf`, is included in your project root (at ./assets/OpenSand-Regular.ttf'). There is a copy in the `dist` folder.
+You will need to ensure the font, `OpenSans-Regular.ttf`, is included in your project root (at ./assets/OpenSand-Regular.ttf'). There is a copy in the `dist/assets` folder.
 
 If, however, you wish to change the location of the font, simply call `setFontsDir` on the ChordBox instance before rendering.
 

@@ -24,7 +24,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, 'index.html.template'), to: path.resolve(__dirname, "dist/index.html") },
-        { from: path.resolve(__dirname, 'src/libs/live.js'), to: path.resolve(__dirname, "dist/live.js") }
+        { from: path.resolve(__dirname, 'src/libs/live.js'), to: path.resolve(__dirname, "dist/live.js") },
+        { from: path.resolve(__dirname, '../fonts/*'), to: path.resolve(__dirname, "dist/assets") }
       ],
     }),
   ],
