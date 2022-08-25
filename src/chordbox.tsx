@@ -380,6 +380,10 @@ class ChordBox {
           )
           .fill(CHORDBOX_SETTINGS.fretMarkerFillColor)
 
+        if (!fretMarkerIndex && this.chordBoxOptions.baseFret === 1) {
+          fretMarker.fill('none')
+        }
+
         fretMarker.move(
           0,
           fretMarkerIndex*fretHeight,
