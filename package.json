@@ -24,7 +24,8 @@
     "watch-demo-server": "webpack -c ./demo/webpack.config.js --watch",
     "build": "npm-run-all build-chordbox build-typings",
     "build-chordbox": "NODE_ENV=production webpack -c ./webpack.config.js",
-    "build-typings": "tsc -p tsconfig.json"
+    "build-typings": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm-run-all build"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",
