@@ -60,6 +60,7 @@ const CHORDBOX_SETTINGS = {
   stringLabelFontColor: '#000',
 
   bodyFillColor: '#fff',
+  bodyMarginBottom: 5,
 
   nutContainerPadding: 15,
   nutHeight: 10,
@@ -317,7 +318,7 @@ class ChordBox {
     const chordBoxBody = SVG()
       .rect(
         CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth,
-        CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight
+        CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.bodyMarginBottom
       )
       .fill(CHORDBOX_SETTINGS.bodyFillColor)
 
@@ -361,7 +362,7 @@ class ChordBox {
     const chordBoxFretsGroup = SVG().group()
 
     const fretsWidth = (CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth)-(2*CHORDBOX_SETTINGS.nutContainerPadding)
-    const fretsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight
+    const fretsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
     const fretHeight = fretsHeight/this.chordBoxOptions.frets
 
     const chordBoxFretsContainer = SVG()
@@ -412,7 +413,7 @@ class ChordBox {
     const chordBoxStringsGroup = SVG().group()
 
     const stringsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
-    const stringsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight
+    const stringsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight - CHORDBOX_SETTINGS.bodyMarginBottom
     const stringWidth = stringsWidth/this.chordBoxOptions.tunings.length
     const stringGuageScaleFactor = 0.125
 
@@ -459,7 +460,7 @@ class ChordBox {
     const chordBoxDotsGroup = SVG().group()
 
     const dotsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
-    const dotsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight
+    const dotsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
     const dotWidth = dotsWidth/this.chordBoxOptions.tunings.length
     const dotHeight = dotsHeight/this.chordBoxOptions.frets
 
