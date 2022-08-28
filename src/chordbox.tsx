@@ -79,6 +79,8 @@ const CHORDBOX_SETTINGS = {
   dotFontSize: 12,
   dotColor: '#fff',
   dotFillColor: '#000',
+  dotOpenStrokeFillColor: '#000',
+  dotCrossStrokeColor: '#f00',
 
   barrePadding: 10,
   barreRadius: 3, // follow circle path
@@ -467,9 +469,18 @@ class ChordBox {
     const chordBoxDotsGroup = SVG().group()
 
     const dotsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
-    const dotsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const dotsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const dotsPlayedHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
     const dotWidth = dotsWidth/this.chordBoxOptions.tunings.length
-    const dotHeight = dotsHeight/this.chordBoxOptions.frets
+    const dotHeight = dotsPlayedHeight/this.chordBoxOptions.frets
+
+    // helper for open/non-played dots
+    const dotsNonPlayedYOffset = CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+
+    // helpers for dot id
+    const dotIsFingered = (dot: ChordBoxDot) => dot.fret >= 1
+    const dotIsOpen = (dot: ChordBoxDot) => dot.fret === 0
+    const dotIsNotPlayed = (dot: ChordBoxDot) => dot.fret === -1
 
     const strings = this.chordBoxOptions.tunings.length
 
@@ -486,17 +497,63 @@ class ChordBox {
       .map(dot => {
         const dotGroup = SVG().group()
 
-        const dotContainer = SVG()
+        let dotContainer = SVG()
           .circle(CHORDBOX_SETTINGS.dotSize)
           .fill(CHORDBOX_SETTINGS.dotFillColor)
 
+        // common x
         dotContainer
           .cx((strings - dot.string) * dotWidth + dotWidth/2)
-          .cy((dot.fret-1) * dotHeight + dotHeight/2)
+
+        if (dotIsFingered(dot)) {
+          dotContainer
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsNonPlayedYOffset)
+
+        } else if (dotIsOpen(dot)) {
+          // overlay the string note
+          dotContainer
+            .fill('none')
+            .stroke({
+              width: 2, // hard-coded for now
+              color: CHORDBOX_SETTINGS.dotOpenStrokeFillColor
+            })
+            .cx((strings - dot.string) * dotWidth + dotWidth/2)
+            .cy(CHORDBOX_SETTINGS.titleHeight /2)
+
+        } else if (dotIsNotPlayed(dot)) {
+
+          // change to cross and move
+          const crossLength = 16
+
+          dotContainer = SVG()
+            .polyline([
+              [0,0],
+              [crossLength,crossLength],
+              [crossLength, crossLength],
+              [crossLength/2, crossLength/2],
+              [crossLength/2, crossLength/2],
+              [0, crossLength],
+              [0, crossLength],
+              [crossLength, 0],
+              [crossLength, 0],
+              [crossLength/2, crossLength/2]
+            ])
+            .stroke({
+              width: 3, // hard-coded for now
+              color: CHORDBOX_SETTINGS.dotCrossStrokeColor
+            })
+            .cx((strings - dot.string) * dotWidth + dotWidth/2)
+            .cy(CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.nutHeight/2)
+        }
 
         // nudge if not showing nut
-        if (this.chordBoxOptions.baseFret > 1) {
-          dotContainer.cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2)
+        if (this.chordBoxOptions.baseFret > 1 && dotIsNotPlayed(dot)) {
+          dotContainer
+            .cy(CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.nutHeight + CHORDBOX_SETTINGS.fretMarkerHeight/2)
+
+        } else if (this.chordBoxOptions.baseFret > 1 && dotIsFingered(dot)) {
+          dotContainer
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsNonPlayedYOffset)
         }
 
         const dotText = SVG()
@@ -509,15 +566,23 @@ class ChordBox {
 
         dotText
           .cx(((strings - dot.string) * dotWidth + dotWidth/2))
-          .cy((dot.fret-1) * dotHeight + dotHeight/2)
 
-        // nudge if not showing nut
+        if (dotIsFingered(dot)) {
+          dotText
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsNonPlayedYOffset)
+        }
+
         if (this.chordBoxOptions.baseFret > 1) {
-          dotText.cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2)
+          dotText
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsNonPlayedYOffset)
         }
 
         dotGroup.add(dotContainer)
-        dotGroup.add(dotText)
+        
+        // skip non playable
+        if (dotIsFingered(dot)) {
+          dotGroup.add(dotText)
+        }
 
         dotContainer.back()
         dotText.front()
@@ -535,7 +600,7 @@ class ChordBox {
 
     chordBoxDotsGroup.move(
       CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight // because of mixed dot types and offset
     )
 
     return chordBoxDotsGroup
