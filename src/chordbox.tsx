@@ -43,7 +43,7 @@ const CHORDBOX_SETTINGS = {
   titleWidth: 275,
   titleHeight: 50,
   titleFillColor: '#000',
-  titleFontSize: 24,
+  titleFontSize: 20,
   titleFontColor: '#fff',
 
   fretLabelsWidth: 50,
