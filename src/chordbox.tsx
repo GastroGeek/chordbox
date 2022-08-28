@@ -22,6 +22,7 @@ const ChordBoxOptionsDefaults = {
   baseFret: 1,
   dots: [] as ChordBoxDot[],
   dotText: () => '',
+  barres: [] as number[],
   tunings: ['E', 'A', 'D', 'G', 'B', 'E'],
   guages: [46, 36, 25, 17, 13, 10],
 }
@@ -76,7 +77,13 @@ const CHORDBOX_SETTINGS = {
 
   dotSize: 30,
   dotFontSize: 12,
-  dotFillColor: '#000'
+  dotColor: '#fff',
+  dotFillColor: '#000',
+
+  barrePadding: 10,
+  barreRadius: 3, // follow circle path
+  barreFillColor: '#000',
+  barreOpacity: 0.25
 }
 class ChordBox {
 
@@ -426,14 +433,14 @@ class ChordBox {
     const chordBoxStrings = Array
       .from(Array(this.chordBoxOptions.tunings.length))
       .map((_, stringIndex) => {
-        const stringGuage = this.chordBoxOptions.guages[stringIndex] * stringGuageScaleFactor
+        const stringGuage: number = this.chordBoxOptions.guages[stringIndex] * stringGuageScaleFactor
 
         const string = SVG()
           .rect(stringGuage, stringsHeight)
           .fill(CHORDBOX_SETTINGS.stringFillColor)
 
         string.move(
-          stringIndex*stringWidth + stringWidth/2,
+          stringIndex*stringWidth + stringWidth/2 - stringGuage/2,
           0,
         )
 
@@ -465,8 +472,6 @@ class ChordBox {
     const dotHeight = dotsHeight/this.chordBoxOptions.frets
 
     const strings = this.chordBoxOptions.tunings.length
-    const guages = this.chordBoxOptions.guages
-    const stringGuageScaleFactor = 0.125
 
     const optionsDots = this.chordBoxOptions.dots
 
@@ -486,12 +491,12 @@ class ChordBox {
           .fill(CHORDBOX_SETTINGS.dotFillColor)
 
         dotContainer
-          .cx(((strings - dot.string) * dotWidth + dotWidth/2) + (guages[strings - dot.string] * stringGuageScaleFactor) / 2)
+          .cx((strings - dot.string) * dotWidth + dotWidth/2)
           .cy((dot.fret-1) * dotHeight + dotHeight/2)
 
-        // due to our container dimensions
-        if (dot.fret === 1) {
-          dotContainer.cy(dotHeight/2 + CHORDBOX_SETTINGS.nutHeight/(2*this.chordBoxOptions.frets))
+        // nudge if not showing nut
+        if (this.chordBoxOptions.baseFret > 1) {
+          dotContainer.cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2)
         }
 
         const dotText = SVG()
@@ -500,15 +505,15 @@ class ChordBox {
             'font-size': CHORDBOX_SETTINGS.dotFontSize,
             'font-family': CHORDBOX_SETTINGS.fontFamily
           })
-          .fill('#fff')
+          .fill(CHORDBOX_SETTINGS.dotColor)
 
         dotText
-          .cx(((strings - dot.string) * dotWidth + dotWidth/2) + (guages[strings - dot.string] * stringGuageScaleFactor) / 2)
+          .cx(((strings - dot.string) * dotWidth + dotWidth/2))
           .cy((dot.fret-1) * dotHeight + dotHeight/2)
 
-        // due to our container dimensions
-        if (dot.fret === 1) {
-          dotText.cy(dotHeight/2 + CHORDBOX_SETTINGS.nutHeight/(2*this.chordBoxOptions.frets))
+        // nudge if not showing nut
+        if (this.chordBoxOptions.baseFret > 1) {
+          dotText.cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2)
         }
 
         dotGroup.add(dotContainer)
@@ -534,6 +539,81 @@ class ChordBox {
     )
 
     return chordBoxDotsGroup
+  }
+
+  private generateChordBoxBarres () {
+    const chordBoxBarresGroup = SVG().group()
+
+    const barresWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
+    const barresHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const barreWidth = barresWidth/this.chordBoxOptions.tunings.length
+    const barreHeight = barresHeight/this.chordBoxOptions.frets
+
+    const optionsDots = this.chordBoxOptions.dots
+    const barres = this.chordBoxOptions.barres
+
+    const chordBoxBarresContainer = SVG()
+    .rect(
+      barresWidth,
+      barresHeight
+    ).fill('none')
+
+    const chordBoxBarres = Array
+      .from(barres)
+      .map(barre => {
+        const barreGroup = SVG().group()
+
+        // get the dots on the barred fret
+        const barreDots = optionsDots.filter(dot => dot.fret === barre)
+
+        // which strings?
+        const fromString = Math.max(...barreDots.map(dot => dot.string))
+        const toString = Math.min(...barreDots.map(dot => dot.string))
+
+        const barreContainer = SVG()
+          .rect((fromString - toString + 1) * barreWidth,CHORDBOX_SETTINGS.dotSize + CHORDBOX_SETTINGS.barrePadding)
+          .radius(CHORDBOX_SETTINGS.barreRadius)
+          .fill(CHORDBOX_SETTINGS.barreFillColor)
+          .attr({
+            'opacity': CHORDBOX_SETTINGS.barreOpacity
+          })
+
+        barreContainer
+          .cx(((fromString-toString)/2 * barreWidth) + ((6-fromString) * barreWidth) + barreWidth/2)
+          .cy(barre * barreHeight - barreHeight/2)
+
+        chordBoxBarresContainer.add(barreContainer)
+
+        barreGroup.add(barreContainer)
+
+        barreContainer.back()
+
+        return barreGroup
+      })
+
+    if (!(barres && barres.length)) {
+      // bail
+      chordBoxBarresGroup.add(chordBoxBarresContainer)
+
+      chordBoxBarresGroup.back()
+
+      return chordBoxBarresGroup
+    }
+
+    chordBoxBarresGroup.add(chordBoxBarresContainer)
+
+    chordBoxBarres.map(barre => {
+      chordBoxBarresGroup.add(barre)
+    })
+
+    chordBoxBarresGroup.back()
+
+    chordBoxBarresGroup.move(
+      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth,
+      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+    )
+
+    return chordBoxBarresGroup
   }
 
   setFontsDir (fontsDir: string = resolve(__dirname, './assets/fonts')) {
@@ -566,6 +646,14 @@ class ChordBox {
 
     return this
   }
+
+  setBarres (barres: []) {
+    this.chordBoxOptions.barres = barres
+
+    this.render()
+
+    return this
+  }
   
   render () {
     // always clear the renderer
@@ -584,6 +672,7 @@ class ChordBox {
     this.renderer.add(this.generatechordBoxFrets())
     this.renderer.add(this.generateChordBoxStrings())
     this.renderer.add(this.generateChordBoxDots())
+    this.renderer.add(this.generateChordBoxBarres())
 
     // fixes chrome rendering issue
     this.renderer

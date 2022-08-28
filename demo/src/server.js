@@ -14,7 +14,8 @@ app.get('/', cors(corsOptions), (req, res) => {
   res.json({
     border: new ChordBox({
       title: 'Default',
-      dotText: (dot) => `${dot.fret.toString()}?`
+      barres: [2,3],
+      dotText: (dot) => `${dot.fret.toString()}`
     })
       .setDots([
         /*
@@ -26,8 +27,13 @@ app.get('/', cors(corsOptions), (req, res) => {
         */
         { string: 5, fret: 1 },
         { string: 6, fret: 2 },
+        { string: 5, fret: 2 },
+        // { string: 6, fret: 3 },
+        // { string: 5, fret: 3 },
+        { string: 4, fret: 3 },
         { string: 2, fret: 3 }
       ])
+      // .setBarres([2])
       .render()
       .toSVGBase64URI(),
 
@@ -62,6 +68,9 @@ app.get('/', cors(corsOptions), (req, res) => {
       title: 'Six Frets',
       frets: 6,
     })
+      .setDots([
+        { string: 6, fret: 1 },
+      ])
       .render()
       .toSVGBase64URI(),
 
@@ -69,9 +78,13 @@ app.get('/', cors(corsOptions), (req, res) => {
       title: 'Six Frets (BaseFret: 5)',
       frets: 6,
       baseFret: 5,
-      dotText: () => '?'
+      dotText: (dot) => `${dot.fret.toString()}`
     })
-      .setDots([ { string: 1, fret: 1 } ])
+      .setDots([
+        { string: 1, fret: 1 },
+        { string: 5, fret: 3 },
+        { string: 4, fret: 5 }
+      ])
       .render()
       .toSVGBase64URI()
   })
