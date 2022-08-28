@@ -582,6 +582,11 @@ class ChordBox {
           .cx(((fromString-toString)/2 * barreWidth) + ((6-fromString) * barreWidth) + barreWidth/2)
           .cy(barre * barreHeight - barreHeight/2)
 
+        // nudge if not showing nut
+        if (this.chordBoxOptions.baseFret > 1) {
+          barreContainer.cy(barre * barreHeight - barreHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2)
+        }
+
         chordBoxBarresContainer.add(barreContainer)
 
         barreGroup.add(barreContainer)

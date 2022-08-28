@@ -14,25 +14,31 @@ app.get('/', cors(corsOptions), (req, res) => {
   res.json({
     border: new ChordBox({
       title: 'Default',
-      barres: [2,3],
-      dotText: (dot) => `${dot.fret.toString()}`
+      barres: [1],
+      baseFret: 5,
+      dotText: (dot) => `${dot.string.toString()}`
     })
       .setDots([
-        /*
-        [
-          0,x,0,0,0,0 // fret 1
-          x,0,0,0,0,0 // fret 2
-          0,0,0,0,x,0 // fret 3
-        ]
-        */
-        { string: 5, fret: 1 },
-        { string: 6, fret: 2 },
-        { string: 5, fret: 2 },
-        // { string: 6, fret: 3 },
-        // { string: 5, fret: 3 },
-        { string: 4, fret: 3 },
-        { string: 2, fret: 3 }
+        { fret: 1, string: 5 },
+        { fret: 1, string: 4 },
+        { fret: 1, string: 2 }
       ])
+      // .setDots([
+      //   /*
+      //   [
+      //     0,x,0,0,0,0 // fret 1
+      //     x,0,0,0,0,0 // fret 2
+      //     0,0,0,0,x,0 // fret 3
+      //   ]
+      //   */
+      //   { string: 5, fret: 1 },
+      //   { string: 6, fret: 2 },
+      //   { string: 5, fret: 2 },
+      //   // { string: 6, fret: 3 },
+      //   // { string: 5, fret: 3 },
+      //   { string: 4, fret: 3 },
+      //   { string: 2, fret: 3 }
+      // ])
       // .setBarres([2])
       .render()
       .toSVGBase64URI(),
