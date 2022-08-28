@@ -525,6 +525,7 @@ class ChordBox {
           // change to cross and move
           const crossLength = 16
 
+          // @ts-expect-error override svg type
           dotContainer = SVG()
             .polyline([
               [0,0],
