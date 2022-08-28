@@ -14,14 +14,16 @@ app.get('/', cors(corsOptions), (req, res) => {
   res.json({
     border: new ChordBox({
       title: 'Default',
-      barres: [1],
-      baseFret: 5,
+      // barres: [1],
+      // baseFret: 5,
       dotText: (dot) => `${dot.string.toString()}`
     })
       .setDots([
-        { fret: 1, string: 5 },
-        { fret: 1, string: 4 },
-        { fret: 1, string: 2 }
+        { fret: -1, string: 5 },
+        { fret: 0, string: 6 },
+        { fret: 2, string: 5 },
+        { fret: 2, string: 4 },
+        { fret: 2, string: 2 }
       ])
       // .setDots([
       //   /*
