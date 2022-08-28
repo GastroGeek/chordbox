@@ -8,40 +8,34 @@ const port = 3000;
 
 var corsOptions = {
   origin: '*'
+};
+
+const generateAllDots = (frets) => {
+  const dots = [];
+
+  for (var string = 1; string <= 6; string++) {
+    for (var fret = -1; fret < frets+2; fret++) {
+      dots.push({
+        fret,
+        string
+      });
+    }
+  }
+
+  return dots;
 }
 
 app.get('/', cors(corsOptions), (req, res) => {
   res.json({
     border: new ChordBox({
       title: 'Default',
-      // barres: [1],
-      // baseFret: 5,
-      dotText: (dot) => `${dot.string.toString()}`
+      dotText: (dot) => `${dot.fret.toString()}`
     })
       .setDots([
-        { fret: -1, string: 5 },
-        { fret: 0, string: 6 },
-        { fret: 2, string: 5 },
+        { fret: 3, string: 5 },
         { fret: 2, string: 4 },
-        { fret: 2, string: 2 }
+        { fret: 1, string: 2 },
       ])
-      // .setDots([
-      //   /*
-      //   [
-      //     0,x,0,0,0,0 // fret 1
-      //     x,0,0,0,0,0 // fret 2
-      //     0,0,0,0,x,0 // fret 3
-      //   ]
-      //   */
-      //   { string: 5, fret: 1 },
-      //   { string: 6, fret: 2 },
-      //   { string: 5, fret: 2 },
-      //   // { string: 6, fret: 3 },
-      //   // { string: 5, fret: 3 },
-      //   { string: 4, fret: 3 },
-      //   { string: 2, fret: 3 }
-      // ])
-      // .setBarres([2])
       .render()
       .toSVGBase64URI(),
 
@@ -57,9 +51,12 @@ app.get('/', cors(corsOptions), (req, res) => {
       frets: 3,
     })
       .setDots([
-        { string: 5, fret: 3 },
-        { string: 4, fret: 2 },
-        { string: 2, fret: 1 },
+        { fret: 3, string: 5 },
+        { fret: 2, string: 4 },
+        { fret: 1, string: 2 },
+        { fret: 0, string: 3 },
+        { fret: 0, string: 1 },
+        { fret: -1, string: 6 },
       ])
       .render()
       .toSVGBase64URI(),
@@ -68,7 +65,18 @@ app.get('/', cors(corsOptions), (req, res) => {
       title: 'Four Frets',
       frets: 4,
     })
-      .setDots([ { string: 2, fret: 3 } ])
+      .setDots([
+        { fret: 1, string: 2 },
+        { fret: 1, string: 3 },
+        { fret: 1, string: 4 },
+        { fret: 1, string: 5 },
+
+        { fret: 3, string: 2 },
+        { fret: 3, string: 3 },
+        { fret: 3, string: 4 },
+        { fret: 3, string: 5 }
+      ])
+      .setBarres([1,3])
       .render()
       .toSVGBase64URI(),
 
@@ -77,7 +85,7 @@ app.get('/', cors(corsOptions), (req, res) => {
       frets: 6,
     })
       .setDots([
-        { string: 6, fret: 1 },
+        { fret: 1, string: 6 },
       ])
       .render()
       .toSVGBase64URI(),
@@ -89,12 +97,25 @@ app.get('/', cors(corsOptions), (req, res) => {
       dotText: (dot) => `${dot.fret.toString()}`
     })
       .setDots([
-        { string: 1, fret: 1 },
-        { string: 5, fret: 3 },
-        { string: 4, fret: 5 }
+        { fret: 1, string: 1 },
+        { fret: 3, string: 5 },
+        { fret: 5, string: 4 },
+        { fret: 0, string: 3 },
+        { fret: -1, string: 2 },
       ])
       .render()
-      .toSVGBase64URI()
+      .toSVGBase64URI(),
+
+      everything: new ChordBox({
+        title: 'Everything',
+        frets: 5,
+        baseFret: 5,
+        dotText: (dot) => `${dot.fret.toString()}`
+      })
+        .setDots(generateAllDots(5))
+        .setBarres([1,2,3,4,5])
+        .render()
+        .toSVGBase64URI()
   })
 })
 
