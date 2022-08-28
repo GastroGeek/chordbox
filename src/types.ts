@@ -4,7 +4,7 @@ type ChordBoxRenderer = Svg
 
 type ChordBoxOptions = {
   // mixed values
-  [index: string] : number | ChordBoxDot[] | ((dot: ChordBoxDot) => string) | string[] | string | number[]
+  [index: string] : number | ChordBoxDot[] | ((dot: ChordBoxDot) => string) | string[] | string | number[] | undefined
   title?: string;
   frets?: number;
   baseFret?: number;
