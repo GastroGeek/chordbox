@@ -39,7 +39,6 @@ const CHORDBOX_SETTINGS = {
   borderFillColor: '#000',
   fillColor: '#fff',
 
-  // title
   titleWidth: 275,
   titleHeight: 50,
   titleFillColor: '#000',
@@ -48,14 +47,12 @@ const CHORDBOX_SETTINGS = {
 
   fretLabelsWidth: 50,
   fretLabelsContainerFillColor: '#fff',
-
   fretLabelContainerFillColor: '#fff',
   fretLabelFontSize: 16,
   fretLabelFontColor: '#000',
 
   stringLabelsHeight: 50,
   stringLabelsContainerFillColor: '#fff',
-
   stringLabelContainerFillColor: '#fff',
   stringLabelFontSize: 16,
   stringLabelFontColor: '#000',
@@ -71,18 +68,21 @@ const CHORDBOX_SETTINGS = {
   fretsContainerFillColor: '#fff',
   
   fretMarkerHeight: 3,
-  fretMarkerFillColor: '#C0C0C0',
+  fretMarkerFillColor: '#c0c0c0',
 
-  stringFillColor: '#E48C5D',
+  stringFillColor: '#e6a80e',
 
   dotSize: 30,
   dotFontSize: 12,
   dotColor: '#fff',
   dotFillColor: '#000',
-  dotOpenStrokeFillColor: '#000',
+  dotOpenStrokeColor: '#000',
+  dotOpenStrokeWidth: 2,
+  dotCrossLength: 16,
   dotCrossStrokeColor: '#f00',
+  dotCrossStrokeWidth: 5,
 
-  barrePadding: 10,
+  barrePadding: 8,
   barreRadius: 3, // follow circle path
   barreFillColor: '#000',
   barreOpacity: 0.25
@@ -470,12 +470,12 @@ class ChordBox {
 
     const dotsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
     const dotsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.bodyMarginBottom
-    const dotsPlayedHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const dotsFingeredHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
     const dotWidth = dotsWidth/this.chordBoxOptions.tunings.length
-    const dotHeight = dotsPlayedHeight/this.chordBoxOptions.frets
+    const dotHeight = dotsFingeredHeight/this.chordBoxOptions.frets
 
     // helper for open/non-played dots
-    const dotsNonPlayedYOffset = CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+    const dotsFingeredYOffset = CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
 
     // helpers for dot id
     const dotIsFingered = (dot: ChordBoxDot) => dot.fret >= 1
@@ -507,15 +507,15 @@ class ChordBox {
 
         if (dotIsFingered(dot)) {
           dotContainer
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsNonPlayedYOffset)
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsFingeredYOffset)
 
         } else if (dotIsOpen(dot)) {
           // overlay the string note
           dotContainer
             .fill('none')
             .stroke({
-              width: 2, // hard-coded for now
-              color: CHORDBOX_SETTINGS.dotOpenStrokeFillColor
+              color: CHORDBOX_SETTINGS.dotOpenStrokeColor,
+              width: CHORDBOX_SETTINGS.dotOpenStrokeWidth
             })
             .cx((strings - dot.string) * dotWidth + dotWidth/2)
             .cy(CHORDBOX_SETTINGS.titleHeight /2)
@@ -523,7 +523,7 @@ class ChordBox {
         } else if (dotIsNotPlayed(dot)) {
 
           // change to cross and move
-          const crossLength = 16
+          const crossLength = CHORDBOX_SETTINGS.dotCrossLength
 
           // @ts-expect-error override svg type
           dotContainer = SVG()
@@ -540,8 +540,8 @@ class ChordBox {
               [crossLength/2, crossLength/2]
             ])
             .stroke({
-              width: 3, // hard-coded for now
-              color: CHORDBOX_SETTINGS.dotCrossStrokeColor
+              color: CHORDBOX_SETTINGS.dotCrossStrokeColor,
+              width: CHORDBOX_SETTINGS.dotCrossStrokeWidth
             })
             .cx((strings - dot.string) * dotWidth + dotWidth/2)
             .cy(CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.nutHeight/2)
@@ -554,7 +554,7 @@ class ChordBox {
 
         } else if (this.chordBoxOptions.baseFret > 1 && dotIsFingered(dot)) {
           dotContainer
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsNonPlayedYOffset)
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsFingeredYOffset)
         }
 
         const dotText = SVG()
@@ -570,12 +570,12 @@ class ChordBox {
 
         if (dotIsFingered(dot)) {
           dotText
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsNonPlayedYOffset)
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsFingeredYOffset)
         }
 
         if (this.chordBoxOptions.baseFret > 1) {
           dotText
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsNonPlayedYOffset)
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsFingeredYOffset)
         }
 
         dotGroup.add(dotContainer)
