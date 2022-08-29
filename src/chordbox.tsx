@@ -15,8 +15,70 @@ import {
   ChordBoxDot
 } from './types'
 
+// this type is non-public for now
+type ChordBoxStyles = {
+  // typography
+  fontFamily: string,
+
+  // base
+  width: number,
+  height: number,
+  padding: number,
+  radius: number,
+  borderFillColor: string,
+  fillColor: string,
+
+  titleWidth: number,
+  titleHeight: number,
+  titleFillColor: string,
+  titleFontSize: number,
+  titleFontColor: string,
+
+  fretLabelsWidth: number,
+  fretLabelsContainerFillColor: string,
+  fretLabelContainerFillColor: string,
+  fretLabelFontSize: number,
+  fretLabelFontColor: string,
+
+  stringLabelsHeight: number,
+  stringLabelsContainerFillColor: string,
+  stringLabelContainerFillColor: string,
+  stringLabelFontSize: number,
+  stringLabelFontColor: string,
+
+  bodyFillColor: string,
+  bodyMarginBottom: number,
+
+  nutContainerPadding: number,
+  nutHeight: number,
+  nutRadius: number,
+  nutFillColor: string,
+
+  fretsContainerFillColor: string,
+  
+  fretMarkerHeight: number,
+  fretMarkerFillColor: string,
+
+  stringFillColor: string,
+
+  dotSize: number,
+  dotFontSize: number,
+  dotColor: string,
+  dotFillColor: string,
+  dotOpenStrokeColor: string,
+  dotOpenStrokeWidth: number,
+  dotCrossLength: number,
+  dotCrossStrokeColor: string,
+  dotCrossStrokeWidth: number,
+
+  barrePadding: number,
+  barreRadius: number,
+  barreFillColor: string,
+  barreOpacity: number
+}
+
 // the things a user can configure
-const ChordBoxOptionsDefaults = {
+const chordBoxOptionsDefaults = {
   title: 'Chord',
   frets: 3,
   baseFret: 1,
@@ -27,7 +89,7 @@ const ChordBoxOptionsDefaults = {
   guages: [46, 36, 25, 17, 13, 10],
 }
 
-const CHORDBOX_SETTINGS = {
+const chordBoxStylesDefaults : ChordBoxStyles = {
   // typography
   fontFamily: 'Arial',
 
@@ -91,7 +153,8 @@ class ChordBox {
 
   private renderer: ChordBoxRenderer
 
-  private chordBoxOptions: ChordBoxOptions = ChordBoxOptionsDefaults
+  private chordBoxOptions: ChordBoxOptions = chordBoxOptionsDefaults
+  private chordBoxStyles: ChordBoxStyles = chordBoxStylesDefaults
 
   constructor (chordBoxOptions: ChordBoxOptions) {
     this.renderer = SVG()
@@ -130,16 +193,16 @@ class ChordBox {
 
     const chordBoxBaseContainer = SVG()
       .rect(
-        CHORDBOX_SETTINGS.width,
-        CHORDBOX_SETTINGS.height)
-      .radius(CHORDBOX_SETTINGS.radius)
-      .fill(CHORDBOX_SETTINGS.borderFillColor)
+        this.chordBoxStyles.width,
+        this.chordBoxStyles.height)
+      .radius(this.chordBoxStyles.radius)
+      .fill(this.chordBoxStyles.borderFillColor)
 
     const chordBoxBase =  SVG()
       .rect(
-        CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding),
-        CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding))
-      .fill(CHORDBOX_SETTINGS.fillColor)
+        this.chordBoxStyles.width-(2*this.chordBoxStyles.padding),
+        this.chordBoxStyles.height-(2*this.chordBoxStyles.padding))
+      .fill(this.chordBoxStyles.fillColor)
 
     chordBoxBaseGroup.add(chordBoxBaseContainer)
     chordBoxBaseGroup.add(chordBoxBase)
@@ -148,8 +211,8 @@ class ChordBox {
     chordBoxBase.front()
 
     chordBoxBase.move(
-      CHORDBOX_SETTINGS.padding,
-      CHORDBOX_SETTINGS.padding
+      this.chordBoxStyles.padding,
+      this.chordBoxStyles.padding
     )
 
     return chordBoxBaseGroup
@@ -160,20 +223,20 @@ class ChordBox {
 
     const chordBoxTitleContainer = SVG()
       .rect(
-        CHORDBOX_SETTINGS.titleWidth,
-        CHORDBOX_SETTINGS.titleHeight
+        this.chordBoxStyles.titleWidth,
+        this.chordBoxStyles.titleHeight
       )
-      .fill(CHORDBOX_SETTINGS.titleFillColor)
+      .fill(this.chordBoxStyles.titleFillColor)
 
     const ChordBoxTitle = SVG()
       .text(this.chordBoxOptions.title)
       .attr({
-        'font-size': CHORDBOX_SETTINGS.titleFontSize,
-        'font-family': CHORDBOX_SETTINGS.fontFamily
+        'font-size': this.chordBoxStyles.titleFontSize,
+        'font-family': this.chordBoxStyles.fontFamily
       })
-      .fill(CHORDBOX_SETTINGS.titleFontColor)
-      .cx(CHORDBOX_SETTINGS.titleWidth/2)
-      .cy(CHORDBOX_SETTINGS.titleHeight/2)
+      .fill(this.chordBoxStyles.titleFontColor)
+      .cx(this.chordBoxStyles.titleWidth/2)
+      .cy(this.chordBoxStyles.titleHeight/2)
 
     chordBoxTitleGroup.add(chordBoxTitleContainer)
     chordBoxTitleGroup.add(ChordBoxTitle)
@@ -182,8 +245,8 @@ class ChordBox {
     ChordBoxTitle.front()
 
     chordBoxTitleGroup.move(
-      CHORDBOX_SETTINGS.padding,
-      CHORDBOX_SETTINGS.padding
+      this.chordBoxStyles.padding,
+      this.chordBoxStyles.padding
     )
 
     return chordBoxTitleGroup
@@ -192,15 +255,15 @@ class ChordBox {
   private generatechordBoxFretLabels () {
     const chordBoxFretLabelsGroup = SVG().group()
 
-    const fretLabelsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight
+    const fretLabelsHeight = this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.stringLabelsHeight
     const fretLabelHeight = fretLabelsHeight/this.chordBoxOptions.frets
 
     const chordBoxFretLabelsContainer = SVG()
       .rect(
-        CHORDBOX_SETTINGS.fretLabelsWidth,
+        this.chordBoxStyles.fretLabelsWidth,
         fretLabelsHeight
       )
-      .fill(CHORDBOX_SETTINGS.fretLabelsContainerFillColor)
+      .fill(this.chordBoxStyles.fretLabelsContainerFillColor)
     
     const chordBoxFretboardLabels = Array
       .from(Array(this.chordBoxOptions.frets))
@@ -209,19 +272,19 @@ class ChordBox {
 
         const chordBoxFretLabelContainer = SVG()
           .rect(
-            CHORDBOX_SETTINGS.fretLabelsWidth,
+            this.chordBoxStyles.fretLabelsWidth,
             fretLabelHeight
           )
-          .fill(CHORDBOX_SETTINGS.fretLabelContainerFillColor)
+          .fill(this.chordBoxStyles.fretLabelContainerFillColor)
 
         const chordBoxFretLabelText = SVG()
           .text((this.chordBoxOptions.baseFret + fretLabelIndex).toString())
           .attr({
-            'font-size': CHORDBOX_SETTINGS.fretLabelFontSize,
-            'font-family': CHORDBOX_SETTINGS.fontFamily
+            'font-size': this.chordBoxStyles.fretLabelFontSize,
+            'font-family': this.chordBoxStyles.fontFamily
           })
-          .fill(CHORDBOX_SETTINGS.fretLabelFontColor)
-          .cx(CHORDBOX_SETTINGS.fretLabelsWidth/2)
+          .fill(this.chordBoxStyles.fretLabelFontColor)
+          .cx(this.chordBoxStyles.fretLabelsWidth/2)
           .cy(fretLabelHeight/2)
 
         chordBoxFretLabelGroup.add(chordBoxFretLabelContainer)
@@ -248,8 +311,8 @@ class ChordBox {
     chordBoxFretLabelsContainer.back()
 
     chordBoxFretLabelsGroup.move(
-      CHORDBOX_SETTINGS.padding,
-      CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.stringLabelsHeight
+      this.chordBoxStyles.padding,
+      this.chordBoxStyles.padding + this.chordBoxStyles.titleHeight + this.chordBoxStyles.stringLabelsHeight
     )
 
     return chordBoxFretLabelsGroup
@@ -258,15 +321,15 @@ class ChordBox {
   private generatechordBoxStringLabels () {
     const chordBoxStringLabelsGroup = SVG().group()
 
-    const stringLabelsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
+    const stringLabelsWidth = this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth
     const stringLabelWidth = stringLabelsWidth/this.chordBoxOptions.tunings.length // string count
 
     const chordBoxStringLabelsContainer = SVG()
       .rect(
         stringLabelsWidth,
-        CHORDBOX_SETTINGS.stringLabelsHeight
+        this.chordBoxStyles.stringLabelsHeight
       )
-      .fill(CHORDBOX_SETTINGS.stringLabelsContainerFillColor)
+      .fill(this.chordBoxStyles.stringLabelsContainerFillColor)
     
     const chordBoxStringboardLabels = Array
       .from(Array(this.chordBoxOptions.tunings.length /* string count */))
@@ -276,19 +339,19 @@ class ChordBox {
         const chordBoxStringLabelContainer = SVG()
           .rect(
             stringLabelWidth,
-            CHORDBOX_SETTINGS.stringLabelsHeight
+            this.chordBoxStyles.stringLabelsHeight
           )
-          .fill(CHORDBOX_SETTINGS.stringLabelContainerFillColor)
+          .fill(this.chordBoxStyles.stringLabelContainerFillColor)
 
         const chordBoxStringLabelText = SVG()
           .text(this.chordBoxOptions.tunings[stringLabelIndex])
           .attr({
-            'font-size': CHORDBOX_SETTINGS.stringLabelFontSize,
-            'font-family': CHORDBOX_SETTINGS.fontFamily
+            'font-size': this.chordBoxStyles.stringLabelFontSize,
+            'font-family': this.chordBoxStyles.fontFamily
           })
-          .fill(CHORDBOX_SETTINGS.stringLabelFontColor)
+          .fill(this.chordBoxStyles.stringLabelFontColor)
           .cx(stringLabelWidth/2)
-          .cy(CHORDBOX_SETTINGS.stringLabelsHeight/2)
+          .cy(this.chordBoxStyles.stringLabelsHeight/2)
 
         chordBoxStringLabelGroup.add(chordBoxStringLabelContainer)
         chordBoxStringLabelGroup.add(chordBoxStringLabelText)
@@ -314,8 +377,8 @@ class ChordBox {
     chordBoxStringLabelsContainer.back()
 
     chordBoxStringLabelsGroup.move(
-      CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.fretLabelsWidth,
-      CHORDBOX_SETTINGS.padding + CHORDBOX_SETTINGS.titleHeight,
+      this.chordBoxStyles.padding + this.chordBoxStyles.fretLabelsWidth,
+      this.chordBoxStyles.padding + this.chordBoxStyles.titleHeight,
     )
 
     return chordBoxStringLabelsGroup
@@ -326,16 +389,16 @@ class ChordBox {
 
     const chordBoxBody = SVG()
       .rect(
-        CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth,
-        CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+        this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth,
+        this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.stringLabelsHeight-this.chordBoxStyles.bodyMarginBottom
       )
-      .fill(CHORDBOX_SETTINGS.bodyFillColor)
+      .fill(this.chordBoxStyles.bodyFillColor)
 
     chordBoxBodyGroup.add(chordBoxBody)
 
     chordBoxBodyGroup.move(
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight+this.chordBoxStyles.stringLabelsHeight
     )
 
     return chordBoxBodyGroup
@@ -346,22 +409,22 @@ class ChordBox {
 
     const chordBoxNutContainer = SVG()
       .rect(
-        (CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth)-(2*CHORDBOX_SETTINGS.nutContainerPadding),
-        CHORDBOX_SETTINGS.nutHeight
+        (this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth)-(2*this.chordBoxStyles.nutContainerPadding),
+        this.chordBoxStyles.nutHeight
       )
       .fill('none') // hide by default
-      .radius(CHORDBOX_SETTINGS.nutRadius)
+      .radius(this.chordBoxStyles.nutRadius)
     
     // the nut should only be visible if baseFret === 1
     if (this.chordBoxOptions.baseFret === 1) {
-      chordBoxNutContainer.fill(CHORDBOX_SETTINGS.nutFillColor)
+      chordBoxNutContainer.fill(this.chordBoxStyles.nutFillColor)
     }
 
     chordBoxNutGroup.add(chordBoxNutContainer)
 
     chordBoxNutGroup.move(
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth+CHORDBOX_SETTINGS.nutContainerPadding,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth+this.chordBoxStyles.nutContainerPadding,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight+this.chordBoxStyles.stringLabelsHeight
     )
 
     return chordBoxNutGroup
@@ -370,15 +433,15 @@ class ChordBox {
   private generatechordBoxFrets () {
     const chordBoxFretsGroup = SVG().group()
 
-    const fretsWidth = (CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth)-(2*CHORDBOX_SETTINGS.nutContainerPadding)
-    const fretsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const fretsWidth = (this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth)-(2*this.chordBoxStyles.nutContainerPadding)
+    const fretsHeight = this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.stringLabelsHeight-this.chordBoxStyles.nutHeight-this.chordBoxStyles.bodyMarginBottom
     const fretHeight = fretsHeight/this.chordBoxOptions.frets
 
     const chordBoxFretsContainer = SVG()
       .rect(
         fretsWidth,
         fretsHeight
-      ).fill(CHORDBOX_SETTINGS.fretsContainerFillColor)
+      ).fill(this.chordBoxStyles.fretsContainerFillColor)
 
     const chordBoxFretMarkers = Array
       .from(Array(this.chordBoxOptions.frets))
@@ -386,9 +449,9 @@ class ChordBox {
         const fretMarker = SVG()
           .rect(
             fretsWidth,
-            CHORDBOX_SETTINGS.fretMarkerHeight
+            this.chordBoxStyles.fretMarkerHeight
           )
-          .fill(CHORDBOX_SETTINGS.fretMarkerFillColor)
+          .fill(this.chordBoxStyles.fretMarkerFillColor)
 
         if (!fretMarkerIndex && this.chordBoxOptions.baseFret === 1) {
           fretMarker.fill('none')
@@ -411,8 +474,8 @@ class ChordBox {
     chordBoxFretsGroup.back()
 
     chordBoxFretsGroup.move(
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth+CHORDBOX_SETTINGS.nutContainerPadding,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth+this.chordBoxStyles.nutContainerPadding,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight+this.chordBoxStyles.stringLabelsHeight+this.chordBoxStyles.nutHeight
     )
 
     return chordBoxFretsGroup
@@ -421,8 +484,8 @@ class ChordBox {
   private generateChordBoxStrings () {
     const chordBoxStringsGroup = SVG().group()
 
-    const stringsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
-    const stringsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight - CHORDBOX_SETTINGS.bodyMarginBottom
+    const stringsWidth = this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth
+    const stringsHeight = this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.stringLabelsHeight-this.chordBoxStyles.nutHeight - this.chordBoxStyles.bodyMarginBottom
     const stringWidth = stringsWidth/this.chordBoxOptions.tunings.length
     const stringGuageScaleFactor = 0.125
 
@@ -439,7 +502,7 @@ class ChordBox {
 
         const string = SVG()
           .rect(stringGuage, stringsHeight)
-          .fill(CHORDBOX_SETTINGS.stringFillColor)
+          .fill(this.chordBoxStyles.stringFillColor)
 
         string.move(
           stringIndex*stringWidth + stringWidth/2 - stringGuage/2,
@@ -458,8 +521,8 @@ class ChordBox {
     chordBoxStringsGroup.back()
 
     chordBoxStringsGroup.move(
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight+this.chordBoxStyles.stringLabelsHeight+this.chordBoxStyles.nutHeight
     )
 
     return chordBoxStringsGroup
@@ -468,14 +531,14 @@ class ChordBox {
   private generateChordBoxDots () {
     const chordBoxDotsGroup = SVG().group()
 
-    const dotsWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
-    const dotsHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.bodyMarginBottom
-    const dotsFingeredHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const dotsWidth = this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth
+    const dotsHeight = this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.bodyMarginBottom
+    const dotsFingeredHeight = this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.stringLabelsHeight-this.chordBoxStyles.nutHeight-this.chordBoxStyles.bodyMarginBottom
     const dotWidth = dotsWidth/this.chordBoxOptions.tunings.length
     const dotHeight = dotsFingeredHeight/this.chordBoxOptions.frets
 
     // helper for open/non-played dots
-    const dotsFingeredYOffset = CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+    const dotsFingeredYOffset = this.chordBoxStyles.stringLabelsHeight+this.chordBoxStyles.nutHeight
 
     // helpers for dot id
     const dotIsFingered = (dot: ChordBoxDot) => dot.fret >= 1
@@ -498,8 +561,8 @@ class ChordBox {
         const dotGroup = SVG().group()
 
         let dotContainer = SVG()
-          .circle(CHORDBOX_SETTINGS.dotSize)
-          .fill(CHORDBOX_SETTINGS.dotFillColor)
+          .circle(this.chordBoxStyles.dotSize)
+          .fill(this.chordBoxStyles.dotFillColor)
 
         // common x
         dotContainer
@@ -514,16 +577,16 @@ class ChordBox {
           dotContainer
             .fill('none')
             .stroke({
-              color: CHORDBOX_SETTINGS.dotOpenStrokeColor,
-              width: CHORDBOX_SETTINGS.dotOpenStrokeWidth
+              color: this.chordBoxStyles.dotOpenStrokeColor,
+              width: this.chordBoxStyles.dotOpenStrokeWidth
             })
             .cx((strings - dot.string) * dotWidth + dotWidth/2)
-            .cy(CHORDBOX_SETTINGS.titleHeight /2)
+            .cy(this.chordBoxStyles.titleHeight /2)
 
         } else if (dotIsNotPlayed(dot)) {
 
           // change to cross and move
-          const crossLength = CHORDBOX_SETTINGS.dotCrossLength
+          const crossLength = this.chordBoxStyles.dotCrossLength
 
           // @ts-expect-error override svg type
           dotContainer = SVG()
@@ -540,30 +603,30 @@ class ChordBox {
               [crossLength/2, crossLength/2]
             ])
             .stroke({
-              color: CHORDBOX_SETTINGS.dotCrossStrokeColor,
-              width: CHORDBOX_SETTINGS.dotCrossStrokeWidth
+              color: this.chordBoxStyles.dotCrossStrokeColor,
+              width: this.chordBoxStyles.dotCrossStrokeWidth
             })
             .cx((strings - dot.string) * dotWidth + dotWidth/2)
-            .cy(CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.nutHeight/2)
+            .cy(this.chordBoxStyles.titleHeight + this.chordBoxStyles.nutHeight/2)
         }
 
         // nudge if not showing nut
         if (this.chordBoxOptions.baseFret > 1 && dotIsNotPlayed(dot)) {
           dotContainer
-            .cy(CHORDBOX_SETTINGS.titleHeight + CHORDBOX_SETTINGS.nutHeight + CHORDBOX_SETTINGS.fretMarkerHeight/2)
+            .cy(this.chordBoxStyles.titleHeight + this.chordBoxStyles.nutHeight + this.chordBoxStyles.fretMarkerHeight/2)
 
         } else if (this.chordBoxOptions.baseFret > 1 && dotIsFingered(dot)) {
           dotContainer
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsFingeredYOffset)
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + this.chordBoxStyles.fretMarkerHeight/2 + dotsFingeredYOffset)
         }
 
         const dotText = SVG()
           .text(this.chordBoxOptions.dotText(dot))
           .attr({
-            'font-size': CHORDBOX_SETTINGS.dotFontSize,
-            'font-family': CHORDBOX_SETTINGS.fontFamily
+            'font-size': this.chordBoxStyles.dotFontSize,
+            'font-family': this.chordBoxStyles.fontFamily
           })
-          .fill(CHORDBOX_SETTINGS.dotColor)
+          .fill(this.chordBoxStyles.dotColor)
 
         dotText
           .cx(((strings - dot.string) * dotWidth + dotWidth/2))
@@ -575,7 +638,7 @@ class ChordBox {
 
         if (this.chordBoxOptions.baseFret > 1) {
           dotText
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2 + dotsFingeredYOffset)
+            .cy((dot.fret-1) * dotHeight + dotHeight/2 + this.chordBoxStyles.fretMarkerHeight/2 + dotsFingeredYOffset)
         }
 
         dotGroup.add(dotContainer)
@@ -600,8 +663,8 @@ class ChordBox {
     chordBoxDotsGroup.back()
 
     chordBoxDotsGroup.move(
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight // because of mixed dot types and offset
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight // because of mixed dot types and offset
     )
 
     return chordBoxDotsGroup
@@ -610,8 +673,8 @@ class ChordBox {
   private generateChordBoxBarres () {
     const chordBoxBarresGroup = SVG().group()
 
-    const barresWidth = CHORDBOX_SETTINGS.width-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.fretLabelsWidth
-    const barresHeight = CHORDBOX_SETTINGS.height-(2*CHORDBOX_SETTINGS.padding)-CHORDBOX_SETTINGS.titleHeight-CHORDBOX_SETTINGS.stringLabelsHeight-CHORDBOX_SETTINGS.nutHeight-CHORDBOX_SETTINGS.bodyMarginBottom
+    const barresWidth = this.chordBoxStyles.width-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.fretLabelsWidth
+    const barresHeight = this.chordBoxStyles.height-(2*this.chordBoxStyles.padding)-this.chordBoxStyles.titleHeight-this.chordBoxStyles.stringLabelsHeight-this.chordBoxStyles.nutHeight-this.chordBoxStyles.bodyMarginBottom
     const barreWidth = barresWidth/this.chordBoxOptions.tunings.length
     const barreHeight = barresHeight/this.chordBoxOptions.frets
 
@@ -637,11 +700,11 @@ class ChordBox {
         const toString = Math.min(...barreDots.map(dot => dot.string))
 
         const barreContainer = SVG()
-          .rect((fromString - toString + 1) * barreWidth,CHORDBOX_SETTINGS.dotSize + CHORDBOX_SETTINGS.barrePadding)
-          .radius(CHORDBOX_SETTINGS.barreRadius)
-          .fill(CHORDBOX_SETTINGS.barreFillColor)
+          .rect((fromString - toString + 1) * barreWidth,this.chordBoxStyles.dotSize + this.chordBoxStyles.barrePadding)
+          .radius(this.chordBoxStyles.barreRadius)
+          .fill(this.chordBoxStyles.barreFillColor)
           .attr({
-            'opacity': CHORDBOX_SETTINGS.barreOpacity
+            'opacity': this.chordBoxStyles.barreOpacity
           })
 
         barreContainer
@@ -650,7 +713,7 @@ class ChordBox {
 
         // nudge if not showing nut
         if (this.chordBoxOptions.baseFret > 1) {
-          barreContainer.cy(barre * barreHeight - barreHeight/2 + CHORDBOX_SETTINGS.fretMarkerHeight/2)
+          barreContainer.cy(barre * barreHeight - barreHeight/2 + this.chordBoxStyles.fretMarkerHeight/2)
         }
 
         chordBoxBarresContainer.add(barreContainer)
@@ -680,8 +743,8 @@ class ChordBox {
     chordBoxBarresGroup.back()
 
     chordBoxBarresGroup.move(
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.fretLabelsWidth,
-      CHORDBOX_SETTINGS.padding+CHORDBOX_SETTINGS.titleHeight+CHORDBOX_SETTINGS.stringLabelsHeight+CHORDBOX_SETTINGS.nutHeight
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight+this.chordBoxStyles.stringLabelsHeight+this.chordBoxStyles.nutHeight
     )
 
     return chordBoxBarresGroup
@@ -748,8 +811,8 @@ class ChordBox {
     // fixes chrome rendering issue
     this.renderer
       .attr({
-        width: CHORDBOX_SETTINGS.width,
-        height: CHORDBOX_SETTINGS.height,
+        width: this.chordBoxStyles.width,
+        height: this.chordBoxStyles.height,
       })
 
     return this
