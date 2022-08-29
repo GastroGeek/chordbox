@@ -278,7 +278,7 @@ class ChordBox {
           .fill(this.chordBoxStyles.fretLabelContainerFillColor)
 
         const chordBoxFretLabelText = SVG()
-          .text((this.chordBoxOptions.baseFret + fretLabelIndex).toString())
+          .text((this.chordBoxOptions.baseFret+fretLabelIndex).toString())
           .attr({
             'font-size': this.chordBoxStyles.fretLabelFontSize,
             'font-family': this.chordBoxStyles.fontFamily
@@ -312,7 +312,7 @@ class ChordBox {
 
     chordBoxFretLabelsGroup.move(
       this.chordBoxStyles.padding,
-      this.chordBoxStyles.padding + this.chordBoxStyles.titleHeight + this.chordBoxStyles.stringLabelsHeight
+      this.chordBoxStyles.padding + this.chordBoxStyles.titleHeight+this.chordBoxStyles.stringLabelsHeight
     )
 
     return chordBoxFretLabelsGroup
@@ -377,8 +377,8 @@ class ChordBox {
     chordBoxStringLabelsContainer.back()
 
     chordBoxStringLabelsGroup.move(
-      this.chordBoxStyles.padding + this.chordBoxStyles.fretLabelsWidth,
-      this.chordBoxStyles.padding + this.chordBoxStyles.titleHeight,
+      this.chordBoxStyles.padding+this.chordBoxStyles.fretLabelsWidth,
+      this.chordBoxStyles.padding+this.chordBoxStyles.titleHeight,
     )
 
     return chordBoxStringLabelsGroup
@@ -498,14 +498,14 @@ class ChordBox {
     const chordBoxStrings = Array
       .from(Array(this.chordBoxOptions.tunings.length))
       .map((_, stringIndex) => {
-        const stringGuage: number = this.chordBoxOptions.guages[stringIndex] * stringGuageScaleFactor
+        const stringGuage: number = this.chordBoxOptions.guages[stringIndex]*stringGuageScaleFactor
 
         const string = SVG()
           .rect(stringGuage, stringsHeight)
           .fill(this.chordBoxStyles.stringFillColor)
 
         string.move(
-          stringIndex*stringWidth + stringWidth/2 - stringGuage/2,
+          stringIndex*stringWidth+stringWidth/2-stringGuage/2,
           0,
         )
 
@@ -566,11 +566,11 @@ class ChordBox {
 
         // common x
         dotContainer
-          .cx((strings - dot.string) * dotWidth + dotWidth/2)
+          .cx((strings-dot.string)*dotWidth+dotWidth/2)
 
         if (dotIsFingered(dot)) {
           dotContainer
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsFingeredYOffset)
+            .cy((dot.fret-1)*dotHeight+dotHeight/2+dotsFingeredYOffset)
 
         } else if (dotIsOpen(dot)) {
           // overlay the string note
@@ -580,8 +580,8 @@ class ChordBox {
               color: this.chordBoxStyles.dotOpenStrokeColor,
               width: this.chordBoxStyles.dotOpenStrokeWidth
             })
-            .cx((strings - dot.string) * dotWidth + dotWidth/2)
-            .cy(this.chordBoxStyles.titleHeight /2)
+            .cx((strings-dot.string)*dotWidth+dotWidth/2)
+            .cy(this.chordBoxStyles.titleHeight/2)
 
         } else if (dotIsNotPlayed(dot)) {
 
@@ -593,21 +593,21 @@ class ChordBox {
             .polyline([
               [0,0],
               [crossLength,crossLength],
-              [crossLength, crossLength],
-              [crossLength/2, crossLength/2],
-              [crossLength/2, crossLength/2],
-              [0, crossLength],
-              [0, crossLength],
-              [crossLength, 0],
-              [crossLength, 0],
+              [crossLength,crossLength],
+              [crossLength/2,crossLength/2],
+              [crossLength/2,crossLength/2],
+              [0,crossLength],
+              [0,crossLength],
+              [crossLength,0],
+              [crossLength,0],
               [crossLength/2, crossLength/2]
             ])
             .stroke({
               color: this.chordBoxStyles.dotCrossStrokeColor,
               width: this.chordBoxStyles.dotCrossStrokeWidth
             })
-            .cx((strings - dot.string) * dotWidth + dotWidth/2)
-            .cy(this.chordBoxStyles.titleHeight + this.chordBoxStyles.nutHeight/2)
+            .cx((strings-dot.string)*dotWidth+dotWidth/2)
+            .cy(this.chordBoxStyles.titleHeight+this.chordBoxStyles.nutHeight/2)
         }
 
         // nudge if not showing nut
@@ -617,7 +617,7 @@ class ChordBox {
 
         } else if (this.chordBoxOptions.baseFret > 1 && dotIsFingered(dot)) {
           dotContainer
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + this.chordBoxStyles.fretMarkerHeight/2 + dotsFingeredYOffset)
+            .cy((dot.fret-1)*dotHeight+dotHeight/2+this.chordBoxStyles.fretMarkerHeight/2+dotsFingeredYOffset)
         }
 
         const dotText = SVG()
@@ -629,16 +629,16 @@ class ChordBox {
           .fill(this.chordBoxStyles.dotColor)
 
         dotText
-          .cx(((strings - dot.string) * dotWidth + dotWidth/2))
+          .cx(((strings-dot.string)*dotWidth+dotWidth/2))
 
         if (dotIsFingered(dot)) {
           dotText
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + dotsFingeredYOffset)
+            .cy((dot.fret-1)*dotHeight+dotHeight/2+dotsFingeredYOffset)
         }
 
         if (this.chordBoxOptions.baseFret > 1) {
           dotText
-            .cy((dot.fret-1) * dotHeight + dotHeight/2 + this.chordBoxStyles.fretMarkerHeight/2 + dotsFingeredYOffset)
+            .cy((dot.fret-1) * dotHeight+dotHeight/2 + this.chordBoxStyles.fretMarkerHeight/2 + dotsFingeredYOffset)
         }
 
         dotGroup.add(dotContainer)
@@ -700,7 +700,7 @@ class ChordBox {
         const toString = Math.min(...barreDots.map(dot => dot.string))
 
         const barreContainer = SVG()
-          .rect((fromString - toString + 1) * barreWidth,this.chordBoxStyles.dotSize + this.chordBoxStyles.barrePadding)
+          .rect((fromString-toString+1) * barreWidth, this.chordBoxStyles.dotSize+this.chordBoxStyles.barrePadding)
           .radius(this.chordBoxStyles.barreRadius)
           .fill(this.chordBoxStyles.barreFillColor)
           .attr({
@@ -708,12 +708,12 @@ class ChordBox {
           })
 
         barreContainer
-          .cx(((fromString-toString)/2 * barreWidth) + ((6-fromString) * barreWidth) + barreWidth/2)
-          .cy(barre * barreHeight - barreHeight/2)
+          .cx(((fromString-toString)/2*barreWidth)+((6-fromString)*barreWidth)+barreWidth/2)
+          .cy(barre*barreHeight-barreHeight/2)
 
         // nudge if not showing nut
         if (this.chordBoxOptions.baseFret > 1) {
-          barreContainer.cy(barre * barreHeight - barreHeight/2 + this.chordBoxStyles.fretMarkerHeight/2)
+          barreContainer.cy(barre*barreHeight-barreHeight/2+this.chordBoxStyles.fretMarkerHeight/2)
         }
 
         chordBoxBarresContainer.add(barreContainer)
