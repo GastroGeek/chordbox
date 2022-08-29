@@ -22,10 +22,11 @@
     "watch": "npm-run-all --parallel watch-chordbox watch-demo-server",
     "watch-chordbox": "webpack -c ./webpack.config.js --watch",
     "watch-demo-server": "webpack -c ./demo/webpack.config.js --watch",
-    "build": "npm-run-all build-chordbox build-typings",
+    "build": "npm-run-all lint build-chordbox build-typings",
     "build-chordbox": "NODE_ENV=production webpack -c ./webpack.config.js",
     "build-typings": "tsc -p tsconfig.json",
-    "prepublishOnly": "npm-run-all build"
+    "lint": "eslint .",
+    "prepublishOnly": "npm-run-all lint build"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",
@@ -36,6 +37,10 @@
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^11.0.0",
     "cors": "^2.8.5",
+    "eslint": "^8.23.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
     "express": "^4.18.1",
     "nodemon": "^2.0.19",
     "npm-run-all": "^4.1.5",

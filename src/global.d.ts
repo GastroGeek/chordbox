@@ -1,1 +1,1 @@
-declare module "svgdom"
+declare module 'svgdom'

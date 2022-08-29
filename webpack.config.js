@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 const CopyPlugin = require('copy-webpack-plugin')
 
@@ -12,26 +12,26 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: ['babel-loader'],
-        exclude: [/node_modules/],
-      },
-    ],
+        exclude: [/node_modules/]
+      }
+    ]
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: path.resolve(__dirname, 'fonts/*'), to: path.resolve(__dirname, "dist/assets") },
-      ],
-    }),
+        { from: path.resolve(__dirname, 'fonts/*'), to: path.resolve(__dirname, 'dist/assets') }
+      ]
+    })
   ],
   output: {
     library: 'chordbox',
     libraryTarget: 'umd',
-    libraryExport: "default",
+    libraryExport: 'default',
     filename: 'chordbox.umd.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true,
+    clean: true
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js']
   }
-};
+}

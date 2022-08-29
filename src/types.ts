@@ -2,6 +2,11 @@ import { Svg } from '@svgdotjs/svg.js'
 
 type ChordBoxRenderer = Svg
 
+type ChordBoxDot = {
+  string: number;
+  fret: number;
+}
+
 type ChordBoxOptions = {
   // mixed values
   [index: string] : number | ChordBoxDot[] | ((dot: ChordBoxDot) => string) | string[] | string | number[] | undefined
@@ -15,13 +20,8 @@ type ChordBoxOptions = {
   guages?: number[];
 }
 
-type ChordBoxDot = {
-  string: number;
-  fret: number;
-}
-
 export {
   ChordBoxRenderer,
-  ChordBoxOptions,
-  ChordBoxDot
+  ChordBoxDot,
+  ChordBoxOptions
 }
