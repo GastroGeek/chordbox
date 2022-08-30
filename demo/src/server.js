@@ -29,13 +29,13 @@ app.get('/', cors(corsOptions), (req, res) => {
   res.json({
     border: new ChordBox({
       title: 'Default',
-      dotText: (dot) => `${dot.fret.toString()}`
-    })
-      .setDots([
+      dots: [
         { fret: 3, string: 5 },
         { fret: 2, string: 4 },
         { fret: 1, string: 2 }
-      ])
+      ],
+      dotText: (dot) => `${dot.fret.toString()}`
+    })
       .render()
       .toSVGBase64URI(),
 
@@ -110,10 +110,10 @@ app.get('/', cors(corsOptions), (req, res) => {
       title: 'Everything',
       frets: 5,
       baseFret: 5,
+      barres: [1, 2, 3, 4, 5],
       dotText: (dot) => `${dot.fret.toString()}`
     })
       .setDots(generateAllDots(5))
-      .setBarres([1, 2, 3, 4, 5])
       .render()
       .toSVGBase64URI()
   })
