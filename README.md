@@ -94,7 +94,7 @@ As mentioned earlier, there are some `setter` methods you can use depending on y
 |setFrets()|number|Sets the number of visible frets on the ChordBox
 |setBaseFret()|number|Sets the first fret shown on the ChordBox
 |setDots()|ChordBoxDot[]|Sets the 'dots' to show on the ChordBox
-|setBarres()|number[]|Sets which frets should be barred). This is automatically set to stretch from lowest fretted string to highest on the designated fret.
+|setBarres()|number[]|Sets which frets should be barred. This is automatically set to stretch from lowest fretted string to highest on the designated fret.
 
 # Documentation
 
