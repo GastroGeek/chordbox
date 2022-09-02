@@ -4,7 +4,7 @@ A simple SVG-based guitar chord renderer.
 
 ## Usage
 
-I originally made ChordBox for a [Raycast](https://www.raycast.com/) extension I made - [Guitar Chords](https://www.raycast.com/GastroGeek/google-chords). It allows me to generate SVG images without the need for an actual browser/DOM (it's using [svgdom](https://github.com/svgdotjs/svgdom) and [SVG.js](https://svgjs.dev/) under-the-hood)
+I originally made ChordBox for a [Raycast](https://www.raycast.com/) extension I made - [Guitar Chords](https://www.raycast.com/GastroGeek/guitar-chords). It allows me to generate SVG images without the need for an actual browser/DOM (it's using [svgdom](https://github.com/svgdotjs/svgdom) and [SVG.js](https://svgjs.dev/) under-the-hood)
 
 You can either create an instance and configure it with options at the same time, or set/re-set various options sometime later via setter methods.
 
